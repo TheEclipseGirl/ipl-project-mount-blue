@@ -3,8 +3,10 @@ const express = require('express');
 const app = express();
 const port = 8000;
 
-const deliveries = require('../data/deliveries.json');
-const matches = require('../data/matches.json');
+const ipl = require('./ipl');
+
+
+console.log(ipl.noOfMatchesPlayedPerYr());
 
 
 
