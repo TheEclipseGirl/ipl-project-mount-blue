@@ -9,7 +9,7 @@ const ipl = require('./ipl');
 console.log(ipl.noOfMatchesPlayedPerYr());
 console.log(ipl.noOfMatchesWonPerTeamPerYr());
 console.log(ipl.extraRunsConceded());
-
+console.log(ipl.top10EcoBowlers2015());
 
 
 app.listen(port, (err)=> {
