@@ -4,12 +4,22 @@ const app = express();
 const port = 8000;
 
 const ipl = require('./ipl');
+const createFile = require('./createFile');
 
+let a =  ipl.noOfMatchesPlayedPerYr();
+let b = ipl.noOfMatchesWonPerTeamPerYr();
+let c = ipl.extraRunsConceded();
+let d = ipl.top10EcoBowlers2015();
 
-console.log(ipl.noOfMatchesPlayedPerYr());
-console.log(ipl.noOfMatchesWonPerTeamPerYr());
-console.log(ipl.extraRunsConceded());
-console.log(ipl.top10EcoBowlers2015());
+a = JSON.stringify(a);
+b = JSON.stringify(b);
+c = JSON.stringify(c);
+d = JSON.stringify(d);
+createFile.newFile('noOfMatchesPlayedPerYr.json', a);
+createFile.newFile('noOfMatchesWonPerTeamPerYr.json', b);
+createFile.newFile('extraRunsConceded.json', c);
+createFile.newFile('top10EcoBowlers2015.json', d);
+
 
 
 app.listen(port, (err)=> {

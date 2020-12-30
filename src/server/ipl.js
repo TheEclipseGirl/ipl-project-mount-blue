@@ -93,8 +93,6 @@ module.exports.top10EcoBowlers2015 = () => {
         economy.push(bowlerWithEco);
     }
 
-    console.log('e---------------------------------' ,bowlersIn2015);
-
     economy.sort((a, b) => (a.economy > b.economy) ? 1 : -1);
 
     for(let i = 0; i <= 10; i++){
