@@ -69,14 +69,14 @@ module.exports.top10EcoBowlers2015 = () => {
         if(matchId[i.match_id]){
             if(!bowlersIn2015[i.bowler]){
                 bowlersIn2015[i.bowler] = {};
-                if(i.wide_runs === 0 || i.noball_runs === 0 || i.penalty_runs == 0){
+                if(i.wide_runs === 0 && i.noball_runs === 0 && i.penalty_runs == 0){
                     bowlersIn2015[i.bowler]['totalBowls'] = 1;
                 }else{
                     bowlersIn2015[i.bowler]['totalBowls'] = 0;
                 }
                 bowlersIn2015[i.bowler]['totalRunsGiven'] = i.total_runs;
             }else{
-                if(i.wide_runs === 0 || i.noball_runs === 0 || i.penalty_runs == 0){
+                if(i.wide_runs === 0 && i.noball_runs === 0 && i.penalty_runs == 0){
                     bowlersIn2015[i.bowler]['totalBowls'] += 1;
                 }
                 bowlersIn2015[i.bowler]['totalRunsGiven'] += i.total_runs;
@@ -92,6 +92,8 @@ module.exports.top10EcoBowlers2015 = () => {
         }
         economy.push(bowlerWithEco);
     }
+
+    console.log('e---------------------------------' ,bowlersIn2015);
 
     economy.sort((a, b) => (a.economy > b.economy) ? 1 : -1);
 
