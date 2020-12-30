@@ -7,7 +7,7 @@ const ipl = require('./ipl');
 
 
 console.log(ipl.noOfMatchesPlayedPerYr());
-
+console.log(ipl.noOfMatchesWonPerTeamPerYr());
 
 
 app.listen(port, (err)=> {
