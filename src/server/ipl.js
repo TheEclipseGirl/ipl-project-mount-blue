@@ -1,9 +1,6 @@
-const deliveries = require('../data/deliveries.json');
-const matches = require('../data/matches.json');
-
 // Question:1
 
-module.exports.noOfMatchesPlayedPerYr = () => {
+module.exports.noOfMatchesPlayedPerYr = (matches) => {
    let totalMatchesPlyforEachYr = {};
     matches.map(i => {
         if(!totalMatchesPlyforEachYr[i.season]){
@@ -16,7 +13,7 @@ module.exports.noOfMatchesPlayedPerYr = () => {
 }
 
 // Question:2
-module.exports.noOfMatchesWonPerTeamPerYr = ()=>{
+module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
     let ans= {};
     matches.map( (i)  => {
         if(!ans[i.season]){
@@ -34,34 +31,33 @@ module.exports.noOfMatchesWonPerTeamPerYr = ()=>{
     return ans;
 }
 // Question:3
-module.exports.extraRunsConceded = ()=>{
+module.exports.extraRunsConcededInAYear = (matches , deliveries, year)=>{
     let ans={};
     let matchId = {};
     matches.map((i)=>{
-        if(i.season === 2016){
+        if(i.season == year){
             matchId[i.id] = i.season;
         }
     });
-
     deliveries.map((i) => {
         if(matchId[i.match_id]){
             if(!ans[i.bowling_team]){
                 ans[i.bowling_team] = i.extra_runs;
-            }else{
-                ans[i.bowling_team] += i.extra_runs;
+            }else{  
+                ans[i.bowling_team] = (parseInt(ans[i.bowling_team]) + parseInt(i.extra_runs)).toString();
             }
         }
     });
     return ans;
 }
 // Question:4
-module.exports.top10EcoBowlers2015 = () => {
+module.exports.topEconomicBowlerInAYear = (matches , deliveries, year, totalRanks) => {
     let ans={};
     let matchId = {};
     let bowlersIn2015 = {};
     let economy = [];
     matches.map((i)=>{
-        if(i.season === 2015){
+        if(i.season === year){
             matchId[i.id] = i.season;
         }
     });
@@ -69,37 +65,34 @@ module.exports.top10EcoBowlers2015 = () => {
         if(matchId[i.match_id]){
             if(!bowlersIn2015[i.bowler]){
                 bowlersIn2015[i.bowler] = {};
-                if(i.wide_runs === 0 && i.noball_runs === 0 && i.penalty_runs == 0){
-                    bowlersIn2015[i.bowler]['totalBowls'] = 1;
+                if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
+                    bowlersIn2015[i.bowler]['totalBowls'] = '1';
                 }else{
-                    bowlersIn2015[i.bowler]['totalBowls'] = 0;
+                    bowlersIn2015[i.bowler]['totalBowls'] = '0';
                 }
                 bowlersIn2015[i.bowler]['totalRunsGiven'] = i.total_runs;
             }else{
-                if(i.wide_runs === 0 && i.noball_runs === 0 && i.penalty_runs == 0){
-                    bowlersIn2015[i.bowler]['totalBowls'] += 1;
+                if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
+                    bowlersIn2015[i.bowler]['totalBowls'] = (parseInt(bowlersIn2015[i.bowler]['totalBowls']) + 1).toString();
                 }
-                bowlersIn2015[i.bowler]['totalRunsGiven'] += i.total_runs;
+                bowlersIn2015[i.bowler]['totalRunsGiven'] += (parseInt(bowlersIn2015[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString;
             }
         }
     });
 
     for(let i in bowlersIn2015){
-        bowlersIn2015[i]['totalOvers'] = bowlersIn2015[i].totalBowls / 6;
+        bowlersIn2015[i]['totalOvers'] = (parseInt(bowlersIn2015[i].totalBowls) / 6).toString();
         let bowlerWithEco = {
             'name': i,
-            'economy': bowlersIn2015[i]['totalRunsGiven'] / bowlersIn2015[i]['totalOvers']
+            'economy': (parseInt(bowlersIn2015[i]['totalRunsGiven']) / parseInt(bowlersIn2015[i]['totalOvers'])).toString()
         }
         economy.push(bowlerWithEco);
     }
 
-    economy.sort((a, b) => (a.economy > b.economy) ? 1 : -1);
+    economy.sort((a, b) => (parseInt(a.economy) > parseInt(b.economy)) ? 1 : -1);
 
-    for(let i = 0; i <= 10; i++){
+    for(let i = 1; i <= totalRanks; i++){
         ans[`rank_${i}`] = {};
-        ans[`rank_${i}`]['name'] = economy[i].name;
-        ans[`rank_${i}`]['economy'] = economy[i].economy;
-    }
-
+        ans[`rank_${i}`]['name'] = economy[i].name;    }
     return ans;
 }

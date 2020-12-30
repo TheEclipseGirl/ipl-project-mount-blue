@@ -4,23 +4,38 @@ const app = express();
 const port = 8000;
 
 const ipl = require('./ipl');
-const createFile = require('./createFile');
+const utils = require('./utils');
 
-let a =  ipl.noOfMatchesPlayedPerYr();
-let b = ipl.noOfMatchesWonPerTeamPerYr();
-let c = ipl.extraRunsConceded();
-let d = ipl.top10EcoBowlers2015();
+const getDeliveriesJson = new Promise((resolve, reject) => {
+    let deliveriesJson = utils.convertCsvToJson('deliveries.csv');
+    resolve(deliveriesJson);
+});
 
-a = JSON.stringify(a);
-b = JSON.stringify(b);
-c = JSON.stringify(c);
-d = JSON.stringify(d);
-createFile.newFile('noOfMatchesPlayedPerYr.json', a);
-createFile.newFile('noOfMatchesWonPerTeamPerYr.json', b);
-createFile.newFile('extraRunsConceded.json', c);
-createFile.newFile('top10EcoBowlers2015.json', d);
+const getMatchesJson = new Promise((resolve, reject) => {
+    let matchesJson = utils.convertCsvToJson('matches.csv');
+    resolve(matchesJson);
+});
+
+Promise.all([getDeliveriesJson, getMatchesJson]).then((values) => {
+    let deliveriesJson = values[0];
+    let matchesJson = values[1];
+
+    let matches_played_per_year = ipl.noOfMatchesPlayedPerYr(matchesJson);
+    let matches_won_per_team_per_year = ipl.noOfMatchesWonPerTeamPerYr(matchesJson);
+    let extra_runs_conceded_per_team = ipl.extraRunsConcededInAYear(matchesJson , deliveriesJson, '2016');
+    let economical_bowlers = ipl.topEconomicBowlerInAYear(matchesJson , deliveriesJson, '2015', 10);
 
 
+    matches_played_per_year = JSON.stringify(matches_played_per_year);
+    matches_won_per_team_per_year = JSON.stringify(matches_won_per_team_per_year);
+    extra_runs_conceded_per_team = JSON.stringify(extra_runs_conceded_per_team);
+    economical_bowlers = JSON.stringify(economical_bowlers);
+
+    utils.newFile('noOfMatchesPlayedPerYr.json', matches_played_per_year);
+    utils.newFile('noOfMatchesWonPerTeamPerYr.json', matches_won_per_team_per_year);
+    utils.newFile('extraRunsConcededInAYear.json', extra_runs_conceded_per_team);
+    utils.newFile('topEconomicBowlerInAYear.json', economical_bowlers);
+});
 
 app.listen(port, (err)=> {
     if(err){
