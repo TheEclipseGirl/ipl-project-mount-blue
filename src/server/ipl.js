@@ -1,33 +1,59 @@
 // Question:1
 
 module.exports.noOfMatchesPlayedPerYr = (matches) => {
-   let totalMatchesPlyforEachYr = {};
-    matches.map(i => {
-        if(!totalMatchesPlyforEachYr[i.season]){
-            totalMatchesPlyforEachYr[i.season] = 1;
+//    let totalMatchesPlyforEachYr = {};
+//     matches.map(i => {
+//         if(!totalMatchesPlyforEachYr[i.season]){
+//             totalMatchesPlyforEachYr[i.season] = 1;
+//         }else{
+//             totalMatchesPlyforEachYr[i.season] += 1;
+//         }
+//     });
+//     return totalMatchesPlyforEachYr;
+
+    const totalMatchesPlyforEachYr = matches.reduce((acc, i) => {
+        if(!acc[i.season]){
+            acc[i.season] = 1;
         }else{
-            totalMatchesPlyforEachYr[i.season] += 1;
+            acc[i.season] += 1;
         }
-    });
+        return acc;
+    }, {});
     return totalMatchesPlyforEachYr;
 }
 
 // Question:2
 module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
-    let ans= {};
-    matches.map( (i)  => {
-        if(!ans[i.season]){
-            ans[i.season] = {}
-            ans[i.season][i.winner] = 1
+    // let ans= {};
+    // matches.map( (i)  => {
+    //     if(!ans[i.season]){
+    //         ans[i.season] = {}
+    //         ans[i.season][i.winner] = 1
+    //     }else{
+    //         if(!ans[i.season][i.winner]){
+    //             ans[i.season][i.winner] = 1;
+    //         }else{
+    //             ans[i.season][i.winner] += 1;
+
+    //         }
+    //     }
+    // });
+
+    const ans = matches.reduce((acc, i) => {
+        if(!acc[i.season]){
+            acc[i.season] = {}
+            acc[i.season][i.winner] = 1
         }else{
-            if(!ans[i.season][i.winner]){
-                ans[i.season][i.winner] = 1;
+            if(!acc[i.season][i.winner]){
+                acc[i.season][i.winner] = 1;
             }else{
-                ans[i.season][i.winner] += 1;
+                acc[i.season][i.winner] += 1;
 
             }
         }
-    });
+        return acc;
+    }, {});
+
     return ans;
 }
 // Question:3
