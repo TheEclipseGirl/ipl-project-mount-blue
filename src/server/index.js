@@ -31,10 +31,10 @@ Promise.all([getDeliveriesJson, getMatchesJson]).then((values) => {
     extra_runs_conceded_per_team = JSON.stringify(extra_runs_conceded_per_team);
     economical_bowlers = JSON.stringify(economical_bowlers);
 
-    utils.newFile('noOfMatchesPlayedPerYr.json', matches_played_per_year);
-    utils.newFile('noOfMatchesWonPerTeamPerYr.json', matches_won_per_team_per_year);
-    utils.newFile('extraRunsConcededInAYear.json', extra_runs_conceded_per_team);
-    utils.newFile('topEconomicBowlerInAYear.json', economical_bowlers);
+    utils.createNewFile('noOfMatchesPlayedPerYr.json', matches_played_per_year);
+    utils.createNewFile('noOfMatchesWonPerTeamPerYr.json', matches_won_per_team_per_year);
+    utils.createNewFile('extraRunsConcededInAYear.json', extra_runs_conceded_per_team);
+    utils.createNewFile('topEconomicBowlerInAYear.json', economical_bowlers);
 });
 
 app.listen(port, (err)=> {

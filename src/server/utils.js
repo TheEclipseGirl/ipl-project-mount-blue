@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const csv = require('csvtojson');
 
-module.exports.newFile = (filename, content) => {
+module.exports.createNewFile = (filename, content) => {
     fs.writeFile(path.join(__dirname + '/../public/output/' + filename), content, (err) => {
         if(err){
             console.log(err);
