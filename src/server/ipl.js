@@ -1,25 +1,13 @@
 // Question:1
-
 module.exports.noOfMatchesPlayedPerYr = (matches) => {
-//    let totalMatchesPlyforEachYr = {};
-//     matches.map(i => {
-//         if(!totalMatchesPlyforEachYr[i.season]){
-//             totalMatchesPlyforEachYr[i.season] = 1;
-//         }else{
-//             totalMatchesPlyforEachYr[i.season] += 1;
-//         }
-//     });
-//     return totalMatchesPlyforEachYr;
-
-    const totalMatchesPlyforEachYr = matches.reduce((acc, i) => {
-        if(!acc[i.season]){
-            acc[i.season] = 1;
+   return matches.reduce((acc, match) => {
+        if(!acc[match.season]){
+            acc[match.season] = 1;
         }else{
-            acc[i.season] += 1;
+            acc[match.season] += 1;
         }
         return acc;
     }, {});
-    return totalMatchesPlyforEachYr;
 }
 
 // Question:2
