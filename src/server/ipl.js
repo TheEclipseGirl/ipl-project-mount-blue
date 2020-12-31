@@ -27,7 +27,7 @@ module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
     //     }
     // });
 
-    const ans = matches.reduce((acc, i) => {
+    return matches.reduce((acc, i) => {
         if(!acc[i.season]){
             acc[i.season] = {}
             acc[i.season][i.winner] = 1
@@ -41,58 +41,101 @@ module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
         }
         return acc;
     }, {});
-
-    return ans;
 }
 // Question:3
 module.exports.extraRunsConcededInAYear = (matches , deliveries, year)=>{
-    let ans={};
-    let matchId = {};
-    matches.map((i)=>{
-        if(i.season == year){
-            matchId[i.id] = i.season;
+    // let ans={};
+    // let matchId = {};
+    // matches.map((i)=>{
+    //     if(i.season == year){
+    //         matchId[i.id] = i.season;
+    //     }
+    // });
+    // deliveries.map((i) => {
+    //     if(matchId[i.match_id]){
+    //         if(!ans[i.bowling_team]){
+    //             ans[i.bowling_team] = i.extra_runs;
+    //         }else{  
+    //             ans[i.bowling_team] = (parseInt(ans[i.bowling_team]) + parseInt(i.extra_runs)).toString();
+    //         }
+    //     }
+    // });
+
+    let matchId = matches.reduce((acc, match) => {
+        if(match.season == year){
+          acc[match.id] = match.season;
         }
-    });
-    deliveries.map((i) => {
-        if(matchId[i.match_id]){
-            if(!ans[i.bowling_team]){
-                ans[i.bowling_team] = i.extra_runs;
+        return acc;
+    }, {});
+
+    return deliveries.reduce((acc, delivery) => {
+        if(matchId[delivery.match_id]){
+            if(!acc[delivery.bowling_team]){
+                acc[delivery.bowling_team] = delivery.extra_runs;
             }else{  
-                ans[i.bowling_team] = (parseInt(ans[i.bowling_team]) + parseInt(i.extra_runs)).toString();
+                acc[delivery.bowling_team] = (parseInt(acc[delivery.bowling_team]) + parseInt(delivery.extra_runs)).toString();
             }
         }
-    });
-    return ans;
+        return acc;
+    }, {});
 }
 // Question:4
 module.exports.topEconomicBowlerInAYear = (matches , deliveries, year, totalRanks) => {
-    let ans={};
-    let matchId = {};
-    let bowlersInYr = {};
+    // let matchId = {};
+    // let bowlersInYr = {};
+    
+    // matches.map((i)=>{
+    //     if(i.season === year){
+    //         matchId[i.id] = i.season;
+    //     }
+    // });
+
+    // deliveries.map((i) => {
+    //     if(matchId[i.match_id]){
+    //         if(!bowlersInYr[i.bowler]){
+    //             bowlersInYr[i.bowler] = {};
+    //             if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
+    //                 bowlersInYr[i.bowler]['totalBowls'] = '1';
+    //             }else{
+    //                 bowlersInYr[i.bowler]['totalBowls'] = '0';
+    //             }
+    //             bowlersInYr[i.bowler]['totalRunsGiven'] = i.total_runs;
+    //         }else{
+    //             if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
+    //                 bowlersInYr[i.bowler]['totalBowls'] = (parseInt(bowlersInYr[i.bowler]['totalBowls']) + 1).toString();
+    //             }
+    //             bowlersInYr[i.bowler]['totalRunsGiven'] += (parseInt(bowlersInYr[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString;
+    //         }
+    //     }
+    // });
     let economy = [];
-    matches.map((i)=>{
+
+    let matchId = matches.reduce((acc, i) => {
         if(i.season === year){
-            matchId[i.id] = i.season;
+          acc[i.id] = i.season;
         }
-    });
-    deliveries.map((i) => {
+        return acc;
+    }, {});
+
+    let bowlersInYr = deliveries.reduce((acc, i) => {
         if(matchId[i.match_id]){
-            if(!bowlersInYr[i.bowler]){
-                bowlersInYr[i.bowler] = {};
+            if(!acc[i.bowler]){
+                acc[i.bowler] = {};
                 if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
-                    bowlersInYr[i.bowler]['totalBowls'] = '1';
+                    acc[i.bowler]['totalBowls'] = '1';
                 }else{
-                    bowlersInYr[i.bowler]['totalBowls'] = '0';
+                    acc[i.bowler]['totalBowls'] = '0';
                 }
-                bowlersInYr[i.bowler]['totalRunsGiven'] = i.total_runs;
+                acc[i.bowler]['totalRunsGiven'] = i.total_runs;
             }else{
                 if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
-                    bowlersInYr[i.bowler]['totalBowls'] = (parseInt(bowlersInYr[i.bowler]['totalBowls']) + 1).toString();
+                    acc[i.bowler]['totalBowls'] = (parseInt(acc[i.bowler]['totalBowls']) + 1).toString();
                 }
-                bowlersInYr[i.bowler]['totalRunsGiven'] += (parseInt(bowlersInYr[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString;
+                acc[i.bowler]['totalRunsGiven'] += (parseInt(acc[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString;
             }
         }
-    });
+        return acc;
+    }, {});
 
     for(let i in bowlersInYr){
         bowlersInYr[i]['totalOvers'] = (parseInt(bowlersInYr[i].totalBowls) / 6).toString();
@@ -111,8 +154,7 @@ module.exports.topEconomicBowlerInAYear = (matches , deliveries, year, totalRank
         arrayOFObjects.push(economy[i].name);
     }
 
-    ans = {
+    return {
         'result' : arrayOFObjects
     }
-    return ans;
 }
