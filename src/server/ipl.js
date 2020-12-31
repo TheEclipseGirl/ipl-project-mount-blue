@@ -105,8 +105,14 @@ module.exports.topEconomicBowlerInAYear = (matches , deliveries, year, totalRank
 
     economy.sort((a, b) => (parseInt(a.economy) > parseInt(b.economy)) ? 1 : -1);
 
-    for(let i = 1; i <= totalRanks; i++){
-        ans[`rank_${i}`] = {};
-        ans[`rank_${i}`]['name'] = economy[i].name;    }
+    let arrayOFObjects = [];
+
+    for(let i = 1; i <= totalRanks; i++) {
+        arrayOFObjects.push(economy[i].name);
+    }
+
+    ans = {
+        'result' : arrayOFObjects
+    }
     return ans;
 }

@@ -2,9 +2,12 @@ const express = require('express');
 
 const app = express();
 const port = 8000;
+const path = require('path');
 
 const ipl = require('./ipl');
 const utils = require('./utils');
+
+const router = express.Router();
 
 const getDeliveriesJson = new Promise((resolve, reject) => {
     let deliveriesJson = utils.convertCsvToJson('deliveries.csv');
@@ -35,7 +38,32 @@ Promise.all([getDeliveriesJson, getMatchesJson]).then((values) => {
     utils.createNewFile('noOfMatchesWonPerTeamPerYr.json', matches_won_per_team_per_year);
     utils.createNewFile('extraRunsConcededInAYear.json', extra_runs_conceded_per_team);
     utils.createNewFile('topEconomicBowlerInAYear.json', economical_bowlers);
+
+
+    app.get('/' , (req , res)=>{
+        return res.sendFile(path.join( __dirname + '/../public/index.html'));
+    });
+    // API for extra Runs ConcededIn A Year
+    app.get('/api/v1/get-extra-runs-conceded',(req , res) =>{
+        return res.sendFile(path.join( __dirname + '/../public/output/extraRunsConcededInAYear.json'));
+    });
+    // API for no of matches played per year
+    app.get('/api/v1/get-no-of-matches-played-per-yr' , (req , res) =>{
+        return res.sendFile(path.join( __dirname + '/../public/output/noOfMatchesPlayedPerYr.json'));
+    }); 
+    // API for no of matches won per team
+    app.get('/api/v1/get-no-of-matches-won-per-team' , (req , res) =>{
+        return res.sendFile(path.join( __dirname + '/../public/output/noOfMatchesWonPerTeamPerYr.json'));
+    });
+    // Top Economic Bowlers
+    app.get('/api/v1/get-top-eco-bowlers' , (req , res) =>{
+        return res.sendFile(path.join( __dirname + '/../public/output/topEconomicBowlerInAYear.json'));
+    });
 });
+
+
+
+
 
 app.listen(port, (err)=> {
     if(err){
