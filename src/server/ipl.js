@@ -12,21 +12,6 @@ module.exports.noOfMatchesPlayedPerYr = (matches) => {
 
 // Question:2
 module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
-    // let ans= {};
-    // matches.map( (i)  => {
-    //     if(!ans[i.season]){
-    //         ans[i.season] = {}
-    //         ans[i.season][i.winner] = 1
-    //     }else{
-    //         if(!ans[i.season][i.winner]){
-    //             ans[i.season][i.winner] = 1;
-    //         }else{
-    //             ans[i.season][i.winner] += 1;
-
-    //         }
-    //     }
-    // });
-
     return matches.reduce((acc, i) => {
         if(!acc[i.season]){
             acc[i.season] = {}
@@ -44,23 +29,6 @@ module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
 }
 // Question:3
 module.exports.extraRunsConcededInAYear = (matches , deliveries, year)=>{
-    // let ans={};
-    // let matchId = {};
-    // matches.map((i)=>{
-    //     if(i.season == year){
-    //         matchId[i.id] = i.season;
-    //     }
-    // });
-    // deliveries.map((i) => {
-    //     if(matchId[i.match_id]){
-    //         if(!ans[i.bowling_team]){
-    //             ans[i.bowling_team] = i.extra_runs;
-    //         }else{  
-    //             ans[i.bowling_team] = (parseInt(ans[i.bowling_team]) + parseInt(i.extra_runs)).toString();
-    //         }
-    //     }
-    // });
-
     let matchId = matches.reduce((acc, match) => {
         if(match.season == year){
           acc[match.id] = match.season;
@@ -81,33 +49,6 @@ module.exports.extraRunsConcededInAYear = (matches , deliveries, year)=>{
 }
 // Question:4
 module.exports.topEconomicBowlerInAYear = (matches , deliveries, year, totalRanks) => {
-    // let matchId = {};
-    // let bowlersInYr = {};
-    
-    // matches.map((i)=>{
-    //     if(i.season === year){
-    //         matchId[i.id] = i.season;
-    //     }
-    // });
-
-    // deliveries.map((i) => {
-    //     if(matchId[i.match_id]){
-    //         if(!bowlersInYr[i.bowler]){
-    //             bowlersInYr[i.bowler] = {};
-    //             if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
-    //                 bowlersInYr[i.bowler]['totalBowls'] = '1';
-    //             }else{
-    //                 bowlersInYr[i.bowler]['totalBowls'] = '0';
-    //             }
-    //             bowlersInYr[i.bowler]['totalRunsGiven'] = i.total_runs;
-    //         }else{
-    //             if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
-    //                 bowlersInYr[i.bowler]['totalBowls'] = (parseInt(bowlersInYr[i.bowler]['totalBowls']) + 1).toString();
-    //             }
-    //             bowlersInYr[i.bowler]['totalRunsGiven'] += (parseInt(bowlersInYr[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString;
-    //         }
-    //     }
-    // });
     let economy = [];
 
     let matchId = matches.reduce((acc, i) => {

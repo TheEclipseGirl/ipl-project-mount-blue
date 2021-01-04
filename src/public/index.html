@@ -8,27 +8,27 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
         <!-- external css -->
-        <link href="./style.css">
+        <link href="/css/style.css">
         <title>
             title
         </title>
     </head>
     <body>
-
+        
         <div class="col-11 mx-auto mt-4">
-            <button class="btn btn-primary" id="question1">
+            <button class="btn btn-warning mt-2" id="question1">
                 Get Extra Runs
              </button>
             
-             <button class="btn btn-primary" id="question2">
+             <button class="btn btn-warning mt-2" id="question2">
                  Number Of Matches Played Per Year
              </button>
      
-             <button class="btn btn-primary" id="question3"> 
+             <button class="btn btn-warning mt-2" id="question3"> 
                  Number Of Matches Won Per Team
              </button>
      
-             <button class="btn btn-primary" id="question4">
+             <button class="btn btn-warning mt-2" id="question4">
                  Top Economic Bowlers
              </button>
      
@@ -45,196 +45,8 @@
 
         <!-- For Visualization Script Tags -->
         <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/modules/data.js"></script>
-        <script src="https://code.highcharts.com/modules/drilldown.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-
-        <script>
-
-            const showGraph = (route)=>{
-                axios.get(`http://localhost:8000/api/v1/${route}`)
-                .then((response)=>{
-
-                    if(route === 'get-extra-runs-conceded' || route === 'get-no-of-matches-played-per-yr' || route === 'get-top-eco-bowlers'){
-                        let tabs = [];
-                        let textXAxis, textYAxis, seriesName, caption;
-
-                        if(route === 'get-extra-runs-conceded'){
-                            textXAxis = 'Team Names';
-                            textYAxis = 'Extra runs conceded in a year';
-                            seriesName = 'Runs';
-                            caption = 'runs';
-                            for(let i in response.data) {
-                                tabs.push({
-                                    'name': i,
-                                    'y': parseInt(response.data[i])
-                                });
-                            }
-                        }else if(route === 'get-no-of-matches-played-per-yr'){
-                            textXAxis = 'Years';
-                            textYAxis = 'Number of matches';
-                            seriesName = 'Matches'
-                            caption = 'matches';
-                            for(let i in response.data) {
-                                tabs.push({
-                                    'name': i,
-                                    'y': parseInt(response.data[i])
-                                });
-                            }
-                        }else{
-                            textXAxis = 'Player Name';
-                            textYAxis = 'Rank';
-                            seriesName = 'Rank'
-                            caption = 'rank';
-                            let rank = 1;
-                            for(let i in response.data.result) {
-                                tabs.push({
-                                    'name': response.data.result[i],
-                                    'y': rank
-                                });
-                                rank++;
-                            }
-                        }                     
-                        // Create the chart
-                        Highcharts.chart('container', {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: textXAxis
-                            },
-                            accessibility: {
-                                announceNewData: {
-                                    enabled: true
-                                }
-                            },
-                            xAxis: {
-                                type: 'category'
-                            },
-                            yAxis: {
-                                title: {
-                                    text: textYAxis
-                                }
-
-                            },
-                            legend: {
-                                enabled: false
-                            },
-                            plotOptions: {
-                                series: {
-                                    borderWidth: 0,
-                                    dataLabels: {
-                                        enabled: true,
-                                        format: '{point.y}'
-                                    }
-                                }
-                            },
-
-                            tooltip: {
-                                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                pointFormat: `<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> ${caption}<br/>`
-                            },
-
-                            series: [
-                                {
-                                    name: seriesName,
-                                    colorByPoint: true,
-                                    data: tabs
-                                }
-                            ]
-                        });
-                    }
-                    else{
-
-                        let categories = [];
-                        let series = [];
-                        let teams = {};
-                        for(let i in response.data){
-                            categories.push(i);
-                        }
-                        for(i in response.data){
-                            for(j in response.data[i]){
-                                teams[j] = true
-                            }
-                        }
-                        delete teams[""];
-
-                        for(let i in teams){
-                            let data = [];
-                            for(let j in response.data){
-                                for (let k in response.data[j]) {
-                                    if(i === k){
-                                        data.push(response.data[j][k]);
-                                    }
-                                }
-                            }
-                            series.push({
-                                'name': i,
-                                'data': data
-                            });
-                        }
-
-
-                        Highcharts.chart('container', {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: 'Teams'
-                            },
-                            xAxis: {
-                                categories: categories,
-                                crosshair: true
-                            },
-                            yAxis: {
-                                min: 0,
-                                title: {
-                                    text: 'Matches Won'
-                                }
-                            },
-                            tooltip: {
-                                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                                footerFormat: '</table>',
-                                shared: true,
-                                useHTML: true
-                            },
-                            plotOptions: {
-                                column: {
-                                    pointPadding: 0.2,
-                                    borderWidth: 0
-                                }
-                            },
-                            series: series
-                        });
-                    }
-                    
-                })
-                .catch((error)=>{
-                    console.log('error' , error);
-                });
-            }
-
-            document.getElementById('question1').addEventListener('click',()=>{
-                let data = showGraph('get-extra-runs-conceded');
-            });
-            document.getElementById('question2').addEventListener('click', ()=>{
-                let data = showGraph('get-no-of-matches-played-per-yr');
-            });
-
-            document.getElementById('question3').addEventListener('click', ()=>{
-                let data = showGraph('get-no-of-matches-won-per-team');
-            });
-
-            document.getElementById('question4').addEventListener('click', ()=>{
-                let data = showGraph('get-top-eco-bowlers');
-            });
-
-        </script>
+        <script src="/js/index.js"></script>
 
     </body>
 </html>

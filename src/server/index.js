@@ -7,6 +7,8 @@ const path = require('path');
 const ipl = require('./ipl');
 const utils = require('./utils');
 
+app.use(express.static(path.join(__dirname + '/../public/assets')));
+
 const router = express.Router();
 
 const getDeliveriesJson = new Promise((resolve, reject) => {
@@ -23,21 +25,21 @@ Promise.all([getDeliveriesJson, getMatchesJson]).then((values) => {
     let deliveriesJson = values[0];
     let matchesJson = values[1];
 
-    let matches_played_per_year = ipl.noOfMatchesPlayedPerYr(matchesJson);
-    let matches_won_per_team_per_year = ipl.noOfMatchesWonPerTeamPerYr(matchesJson);
-    let extra_runs_conceded_per_team = ipl.extraRunsConcededInAYear(matchesJson , deliveriesJson, '2016');
-    let economical_bowlers = ipl.topEconomicBowlerInAYear(matchesJson , deliveriesJson, '2015', 10);
+    let matchesPlayedPerYear = ipl.noOfMatchesPlayedPerYr(matchesJson);
+    let matchesWonPerYear = ipl.noOfMatchesWonPerTeamPerYr(matchesJson);
+    let extraRunsConceededPerYear = ipl.extraRunsConcededInAYear(matchesJson , deliveriesJson, '2016');
+    let economicalBowlers = ipl.topEconomicBowlerInAYear(matchesJson , deliveriesJson, '2015', 10);
 
 
-    matches_played_per_year = JSON.stringify(matches_played_per_year);
-    matches_won_per_team_per_year = JSON.stringify(matches_won_per_team_per_year);
-    extra_runs_conceded_per_team = JSON.stringify(extra_runs_conceded_per_team);
-    economical_bowlers = JSON.stringify(economical_bowlers);
+    matchesPlayedPerYear = JSON.stringify(matchesPlayedPerYear);
+    matchesWonPerYear = JSON.stringify(matchesWonPerYear);
+    extraRunsConceededPerYear = JSON.stringify(extraRunsConceededPerYear);
+    economicalBowlers = JSON.stringify(economicalBowlers);
 
-    utils.createNewFile('noOfMatchesPlayedPerYr.json', matches_played_per_year);
-    utils.createNewFile('noOfMatchesWonPerTeamPerYr.json', matches_won_per_team_per_year);
-    utils.createNewFile('extraRunsConcededInAYear.json', extra_runs_conceded_per_team);
-    utils.createNewFile('topEconomicBowlerInAYear.json', economical_bowlers);
+    utils.createNewFile('noOfMatchesPlayedPerYr.json', matchesPlayedPerYear);
+    utils.createNewFile('noOfMatchesWonPerTeamPerYr.json', matchesWonPerYear);
+    utils.createNewFile('extraRunsConcededInAYear.json', extraRunsConceededPerYear);
+    utils.createNewFile('topEconomicBowlerInAYear.json', economicalBowlers);
 
 
     app.get('/' , (req , res)=>{
@@ -60,10 +62,6 @@ Promise.all([getDeliveriesJson, getMatchesJson]).then((values) => {
         return res.sendFile(path.join( __dirname + '/../public/output/topEconomicBowlerInAYear.json'));
     });
 });
-
-
-
-
 
 app.listen(port, (err)=> {
     if(err){
