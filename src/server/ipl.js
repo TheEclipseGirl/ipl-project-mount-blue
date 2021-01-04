@@ -17,11 +17,13 @@ module.exports.noOfMatchesWonPerTeamPerYr = (matches)=>{
             acc[i.season] = {}
             acc[i.season][i.winner] = 1
         }else{
+            if(i.winner === 'Rising Pune Supergiant'){
+                i.winner = 'Rising Pune Supergiants';
+            }
             if(!acc[i.season][i.winner]){
                 acc[i.season][i.winner] = 1;
             }else{
                 acc[i.season][i.winner] += 1;
-
             }
         }
         return acc;
