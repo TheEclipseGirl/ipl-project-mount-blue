@@ -89,7 +89,7 @@ module.exports.topEconomicBowlerInAYear = (matches , deliveries, year, totalRank
                 if(i.wide_runs === '0' && i.noball_runs === '0' && i.penalty_runs == '0'){
                     bowlersInYr[i.bowler]['totalBowls'] = (parseInt(bowlersInYr[i.bowler]['totalBowls']) + 1).toString();
                 }
-                bowlersInYr[i.bowler]['totalRunsGiven'] += (parseInt(bowlersInYr[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString;
+                bowlersInYr[i.bowler]['totalRunsGiven'] += (parseInt(bowlersInYr[i.bowler]['totalRunsGiven']) + parseInt(i.total_runs)).toString();
             }
         }
     });
